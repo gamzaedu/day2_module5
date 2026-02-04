@@ -32,7 +32,22 @@
 - be-agent, fe-agent와 스킬 매칭 검증 및 수정
 - 모든 스킬 파일 간결화 및 실제 프로젝트 구조 반영
 
+---
+
+## [2026-02-05 12:30] CLAUDE.md 최신화
+
+### 변경된 파일
+- `CLAUDE.md`: 에이전트 테이블 최신화, db-agent 제거
+
+### 작업 요약
+- db-agent 관련 내용 제거
+- be-agent skills: BE-CRUD, BE-refactor, BE-TEST, BE-DEBUG 반영
+- fe-agent skills: FE-CRUD, FE-page, FE-api 반영
+- 작업 순서 3단계 → 2단계 (BE → FE)
+
+---
+
 ## 다음 스텝
-- [ ] DB 스킬 정리 (db-agent 매칭 확인)
+- [x] DB 스킬 정리 → 제외됨
 - [ ] FE-refactor, FE-TEST 스킬 추가 (필요시)
 - [ ] 스킬 실제 동작 테스트

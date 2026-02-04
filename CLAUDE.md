@@ -65,7 +65,6 @@ SQLite 파일(`app.db`)은 backend 폴더에 생성됩니다. 서버 첫 실행 
 - 사용자 요청 분석 및 작업 분해
 - 적절한 서브에이전트에게 작업 위임
 - 서브에이전트 결과 검토 및 통합
-- **skill을 직접 사용하지 않음** (서브에이전트만 skill 사용)
 
 단, 다음과 같은 간단한 작업은 메인 에이전트가 직접 처리:
 - 파일 읽기/탐색
@@ -77,32 +76,24 @@ SQLite 파일(`app.db`)은 backend 폴더에 생성됩니다. 서버 첫 실행 
 
 | 에이전트 | 담당 영역 | Skills |
 |----------|----------|--------|
-| `db-agent` | DB 모델, CRUD, 쿼리 최적화 | DB-model, DB-crud, DB-test, DB-refactor |
-| `be-agent` | API 엔드포인트, 스키마, 비즈니스 로직 | BE-endpoint, BE-refactor, BE-test |
-| `fe-agent` | 페이지, 컴포넌트, API 연동, 스타일링 | FE-page, FE-api, FE-refactor, FE-test |
+| `be-agent` | API 엔드포인트, 스키마, 비즈니스 로직 | BE-CRUD, BE-refactor, BE-TEST, BE-DEBUG |
+| `fe-agent` | 페이지, 컴포넌트, API 연동, 스타일링 | FE-CRUD, FE-page, FE-api |
 
 ### 작업 순서 (권장)
 
 새 기능 개발 시 다음 순서로 진행합니다:
 
 ```
-1. DB (db-agent)  →  2. BE (be-agent)  →  3. FE (fe-agent)
-   모델/CRUD 정의       API 엔드포인트        화면/연동 구현
+1. BE (be-agent)  →  2. FE (fe-agent)
+   API 엔드포인트        화면/연동 구현
 ```
-
-**이유**: 데이터 구조가 먼저 정의되어야 API 설계가 가능하고, API가 있어야 프론트엔드에서 연동할 수 있습니다.
 
 ### 에이전트 간 협업 규칙
 
 1. **영역 침범 금지**: 각 에이전트는 자신의 담당 영역만 수정합니다.
-   - db-agent는 `backend/app/models/`, `backend/app/crud/`, `backend/app/database.py`만 수정
    - be-agent는 `backend/app/routers/`, `backend/app/schemas/`, `backend/app/services/`만 수정
    - fe-agent는 `frontend/src/` 하위만 수정
 
 2. **다른 도메인 작업 발견 시**: 직접 수행하지 않고 메인 에이전트에게 보고하여 해당 에이전트 호출을 요청합니다.
-   - 예: be-agent가 DB 모델 변경이 필요하면 → "db-agent에게 User 모델 수정 필요" 보고
 
 3. **작업 완료 보고**: 각 에이전트는 작업 완료 시 수정한 파일 목록을 반환합니다.
-
-4. **의존성 명시**: 다른 에이전트의 작업에 의존하는 경우 명확히 알립니다.
-   - 예: "be-agent 작업 전 db-agent의 User 모델 생성이 필요합니다"
